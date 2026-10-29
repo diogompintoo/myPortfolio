@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 const CELL = 28;    // size of each square
 const GAP = 3;      // space between squares
-const RADIUS = 170; // radius of the "heat" 
+const RADIUS = 130; // radius of the "heat" 
 
 
 export default function PixelGrid() {
@@ -34,8 +34,7 @@ export default function PixelGrid() {
       if (reduceMotion) draw();
     };
 
-    const draw = () => {
-      // lê as cores atuais (mudam com o modo claro/escuro)
+      const draw = () => {
       const styles = getComputedStyle(document.documentElement);
       const gold = styles.getPropertyValue('--gold').trim();
       const line = styles.getPropertyValue('--line').trim();
@@ -45,17 +44,39 @@ export default function PixelGrid() {
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const i = r * cols + c;
-          const x = c * CELL + GAP / 2;
-          const y = r * CELL + GAP / 2;
-          const size = CELL - GAP;
+          
+          const origCenterX = c * CELL + CELL / 2;
+          const origCenterY = r * CELL + CELL / 2;
+
+          let size = CELL - GAP;
+          let x = c * CELL + GAP / 2;
+          let y = r * CELL + GAP / 2;
 
           if (!reduceMotion) {
             const d = Math.hypot(c * CELL + CELL / 2 - mouse.x, r * CELL + CELL / 2 - mouse.y);
             if (d < RADIUS) heat[i] = Math.max(heat[i], (1 - d / RADIUS) ** 1.6);
-            heat[i] *= 0.94; // apaga devagar
+            heat[i] *= 0.94;
             if (heat[i] < 0.01) heat[i] = 0;
+
+            if (heat[i] > 0) {
+              size = (CELL - GAP) * (1 + heat[i] * 0.35); 
+
+              // Efeito Lente/Esfera (X e Y): Empurra o quadrado ligeiramente para fora do rato
+              const dx = origCenterX - mouse.x;
+              const dy = origCenterY - mouse.y;
+              const distance = d || 1; // evita divisão por zero
+              
+              const push = heat[i] * 12; // Máximo de 12px de distorção lateral
+              const offsetX = (dx / distance) * push;
+              const offsetY = (dy / distance) * push;
+
+              // Recalcula o X e Y para que o quadrado cresça a partir do novo centro distorcido
+              x = (origCenterX + offsetX) - size / 2;
+              y = (origCenterY + offsetY) - size / 2;
+            }
           }
 
+         
           ctx.globalAlpha = 0.55;
           ctx.fillStyle = line;
           ctx.fillRect(x, y, size, size);
@@ -71,6 +92,7 @@ export default function PixelGrid() {
 
       if (!reduceMotion) raf = requestAnimationFrame(draw);
     };
+
 
     const onMove = (e) => {
       const rect = canvas.getBoundingClientRect();
