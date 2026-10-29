@@ -15,9 +15,9 @@ const ui = {
     navAbout: 'Stack',
     navContact: 'Contact',
     cv: 'Download CV',
-    heroTitle: 'Robust, scalable web applications.',
+    heroTitle: 'Where elegant logic meets scalable design.' + '\n' + 'From a single line of code to enterprise scale.',
     heroDesc:
-      "I'm Diogo, a Coding Academy graduate. I build with a strong focus on backend architecture and modern interfaces.",
+      "I'm Diogo, a CodeForAll_ graduate in Software Engineering & AI. I build with a strong focus on backend architecture and modern interfaces.",
     seeProjects: 'See my projects',
     projectsTitle: 'Projects',
     projectsDesc: 'Select a project to see its architecture, stack and repository.',
@@ -30,6 +30,7 @@ const ui = {
     stackLabel: 'Stack',
     repo: 'View repository',
     close: 'Close',
+    demo: 'View demo',
     footer: '© 2026 Diogo Pinto. Built with React and Tailwind CSS.',
   },
   pt: {
@@ -37,9 +38,9 @@ const ui = {
     navAbout: 'Stack',
     navContact: 'Contacto',
     cv: 'Descarregar CV',
-    heroTitle: 'Aplicações web robustas e escaláveis.',
+    heroTitle: 'Onde a lógica elegante se cruza com o design escalável.' + '\n' + 'De uma unica linha de código até à escala empresarial.',
     heroDesc:
-      'Sou o Diogo, formado na Academia de Código. Construo soluções com forte ênfase em arquitetura de backend e interfaces modernas.',
+      'Sou o Diogo, formado na CodeForAll_ em Software Engineering & AI. Construo soluções com forte ênfase em arquitetura de backend e interfaces modernas.',
     seeProjects: 'Ver projetos',
     projectsTitle: 'Projetos',
     projectsDesc: 'Escolhe um projeto para ver a arquitetura, a stack e o repositório.',
@@ -52,6 +53,7 @@ const ui = {
     stackLabel: 'Stack',
     repo: 'Ver repositório',
     close: 'Fechar',
+    demo: 'Ver demonstração',
     footer: '© 2026 Diogo Pinto. Desenvolvido com React e Tailwind CSS.',
   },
 };
@@ -71,7 +73,7 @@ const projects = [
     },
     tags: ['Java', 'Spring Boot', 'Angular', 'PostgreSQL', 'Docker', 'Azure'],
     repo: 'https://github.com/diogompintoo/Fleetwise-AI',
-    demo: 'https://fleetwise-ai-hceggkcpacd0a0he.spaincentral-01.azurewebsites.net/login', // confirma copiando do PDF
+    demo: 'https://fleetwise-ai-hceggkcpacd0a0he.spaincentral-01.azurewebsites.net/login',
   },
   {
     id: 'benders-casino',
@@ -145,7 +147,6 @@ const stack = [
 
 /* ---------- Small componentts ---------- */
 
-// Um componente recebe "props" (os argumentos) e devolve JSX.
 function Section({ id, title, description, children }) {
   return (
     <section id={id} className="mx-auto max-w-5xl scroll-mt-20 border-t border-line px-6 py-16">
@@ -165,12 +166,11 @@ function Tag({ children }) {
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [lang, setLang] = useState('en');
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   const [selected, setSelected] = useState(null);
 
   const t = ui[lang];
 
-  // useEffect corre "efeitos secundários" depois de o React desenhar
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
   }, [dark]);
@@ -199,7 +199,7 @@ export default function App() {
         <header className="sticky top-0 z-20 border-b border-line bg-paper/80 backdrop-blur-md">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
             <a href="#top" className="font-display text-lg font-semibold">
-              Diogo Pinto
+              Diogo Martins Pinto
             </a>
             <nav className="flex items-center gap-4 text-sm">
               <a href="#projects" className="hidden hover:text-gold-ink sm:inline">{t.navProjects}</a>
@@ -222,7 +222,7 @@ export default function App() {
               <button
                 onClick={() => setDark(!dark)}
                 className="rounded-md border border-line px-2.5 py-1.5 transition-colors hover:border-gold"
-                aria-label={dark ? 'Light mode' : 'Dark mode'}
+                aria-label={dark ? 'Dark mode' : 'Light mode'}
               >
                 {dark ? '☀' : '☾'}
               </button>
@@ -253,6 +253,14 @@ export default function App() {
                   className="rounded-lg border border-ink/30 px-6 py-3 font-semibold transition-colors hover:border-gold"
                 >
                   GitHub
+                </a>
+                <a
+                  href={LINKEDIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg border border-ink/30 px-6 py-3 font-semibold transition-colors hover:border-gold"
+                >
+                  LinkedIn
                 </a>
               </div>
             </div>
