@@ -59,47 +59,63 @@ const projects = [
   {
     id: 'fleetwise',
     title: 'FleetWise AI',
-    subtitle: { en: 'Fleet management and optimization platform', pt: 'Plataforma de gestão e otimização de frotas' },
+    subtitle: { en: 'Fleet management platform with an AI layer', pt: 'Plataforma de gestão de frotas com camada de IA' },
     description: {
-      en: 'Advanced fleet management and optimization platform, built around robust architecture, efficiency and a smooth user experience.',
-      pt: 'Plataforma avançada de gestão e otimização de frotas, construída em torno de arquitetura robusta, eficiência e boa experiência de utilização.',
+      en: 'Full-stack fleet platform: Spring Boot REST API and Angular dashboard, deployed on Azure with JWT authentication and role-based access.',
+      pt: 'Plataforma full-stack de frotas: API REST em Spring Boot e dashboard Angular, em produção no Azure, com autenticação JWT e acessos por perfil.',
     },
     architecture: {
-      en: 'A robust backend service structure with REST APIs, database integration and efficient routing logic for high-demand fleet operations.',
-      pt: 'Estrutura de serviços backend robusta, com APIs REST, integração com base de dados e lógica de routing eficiente para operações de frota de alta procura.',
+      en: 'MVCS layering, multi-company vehicle scope, CRUD, analytics and AI insights. PostgreSQL, Docker and GitHub Actions for delivery.',
+      pt: 'Camadas MVCS, âmbito multiempresa de veículos, CRUD, analytics e insights de IA. PostgreSQL, Docker e GitHub Actions na entrega.',
     },
-    tags: ['Java', 'Spring Boot', 'REST APIs', 'Fullstack', 'Maven'],
-    repo: 'https://github.com/diogompintoo/FleetWiseAI',
+    tags: ['Java', 'Spring Boot', 'Angular', 'PostgreSQL', 'Docker', 'Azure'],
+    repo: 'https://github.com/diogompintoo/Fleetwise-AI',
+    demo: 'https://fleetwise-ai-hceggkcpacd0a0he.spaincentral-01.azurewebsites.net/login', // confirma copiando do PDF
   },
   {
-    id: 'game-closet',
-    title: 'Game Closet',
-    subtitle: { en: 'Game collection manager', pt: 'Gestor de coleções de jogos' },
+    id: 'benders-casino',
+    title: "Bender's Casino",
+    subtitle: { en: 'Team project, full-stack Blackjack', pt: 'Projeto em equipa, Blackjack full-stack' },
     description: {
-      en: 'Interactive application for managing and organizing game collections, pairing efficient backend logic with a fluid interface.',
-      pt: 'Aplicação interativa para gerir e organizar coleções de jogos, juntando lógica de backend eficiente a uma interface fluida.',
+      en: 'Blackjack SPA built in a team of 4, with a REST API on the back end and a vanilla JS front end.',
+      pt: 'SPA de Blackjack feita em equipa de 4, com API REST no backend e front-end em JavaScript puro.',
     },
     architecture: {
-      en: 'A dynamic interface built with modern JavaScript and React components, structured data management and a clean UI.',
-      pt: 'Interface dinâmica construída com componentes modernos em JavaScript e React, gestão de dados estruturada e UI limpa.',
+      en: 'Model / Service / Controller layering, integration with an external Deck of Cards API, coordinated through Linear and GitHub.',
+      pt: 'Camadas Model / Service / Controller, integração com uma API externa de baralhos, coordenado com Linear e GitHub.',
     },
-    tags: ['JavaScript', 'React', 'Frontend', 'UI/UX', 'Tailwind CSS'],
+    tags: ['Java', 'Spring Boot', 'JavaScript', 'REST APIs', 'Teamwork'],
+    repo: 'https://github.com/MASG29/Bender-s-Casino',
+  },
+  {
+    id: 'gamecloset',
+    title: 'GameCloset',
+    subtitle: { en: 'Games and consoles inventory', pt: 'Inventário de jogos e consolas' },
+    description: {
+      en: 'Java console app to manage a collection of games and consoles, built on OOP principles.',
+      pt: 'Aplicação Java de consola para gerir uma coleção de jogos e consolas, com princípios de POO.',
+    },
+    architecture: {
+      en: 'Encapsulation, inheritance and polymorphism in a layered Model / Service / Repository design, built with Maven.',
+      pt: 'Encapsulamento, herança e polimorfismo numa arquitetura Model / Service / Repository, com Maven.',
+    },
+    tags: ['Java', 'OOP', 'Maven'],
     repo: 'https://github.com/diogompintoo/GameCloset',
   },
   {
-    id: 'game-closet',
-    title: 'Game Closet',
-    subtitle: { en: 'Game collection manager', pt: 'Gestor de coleções de jogos' },
+    id: 'gamecloset-web',
+    title: 'GameCloset Web',
+    subtitle: { en: 'From console to web', pt: 'Da consola para a web' },
     description: {
-      en: 'Interactive application for managing and organizing game collections, pairing efficient backend logic with a fluid interface.',
-      pt: 'Aplicação interativa para gerir e organizar coleções de jogos, juntando lógica de backend eficiente a uma interface fluida.',
+      en: 'Web version of GameCloset: same domain logic, new delivery layer over HTTP.',
+      pt: 'Versão web do GameCloset: mesma lógica de domínio, nova camada de entrega por HTTP.',
     },
     architecture: {
-      en: 'A dynamic interface built with modern JavaScript and React components, structured data management and a clean UI.',
-      pt: 'Interface dinâmica construída com componentes modernos em JavaScript e React, gestão de dados estruturada e UI limpa.',
+      en: 'Spring Boot REST endpoints expose the inventory operations and an HTML front end consumes them.',
+      pt: 'Endpoints REST em Spring Boot expõem as operações de inventário e um front-end HTML consome-os.',
     },
-    tags: ['JavaScript', 'React', 'Frontend', 'UI/UX', 'Tailwind CSS'],
-    repo: 'https://github.com/diogompintoo/GameCloset',
+    tags: ['Java', 'Spring Boot', 'REST APIs', 'HTML', 'Maven'],
+    repo: 'https://github.com/diogompintoo/GameCloset-Web',
   },
 ];
 
@@ -120,9 +136,10 @@ const otherWork = [
 ];
 
 const stack = [
-  { group: 'Backend', items: ['Java', 'Spring Framework', 'Maven', 'REST APIs'] },
-  { group: 'Frontend', items: ['JavaScript', 'React', 'HTML/CSS', 'Tailwind CSS'] },
-  { group: 'Tools', items: ['Git & GitHub'] },
+  { group: 'Backend', items: ['Java', 'Spring Boot', 'Spring AI', 'REST APIs', 'MVC', 'JWT', 'JUnit e Mockito'] },
+  { group: 'Data', items: ['PostgreSQL', 'SQL', 'Python', 'Pandas', 'Scikit-learn', 'RAG'] },
+  { group: 'Frontend', items: ['JavaScript', 'React', 'Angular', 'HTML/CSS', 'Tailwind CSS'] },
+  { group: 'Tools', items: ['Git e GitHub', 'Docker', 'GitHub Actions', 'Maven', 'Linux', 'Azure', 'Antigravity', 'Vercel', 'Visual Studio'] },
 ];
 
 /* ---------- Small componentts ---------- */
@@ -355,6 +372,16 @@ export default function App() {
               >
                 {t.close}
               </button>
+              {selected.demo && (
+                <a
+                  href={selected.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg border border-line px-4 py-2 font-semibold transition-colors hover:border-gold"
+                >
+                  {t.demo}
+                </a>
+              )}
             </div>
           </div>
         </div>
