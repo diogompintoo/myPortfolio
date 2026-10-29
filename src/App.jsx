@@ -1,279 +1,364 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import PixelGrid from './PixelGrid.jsx';
+
+/* ---------- DADOS (separados do visual) ---------- */
+
+
+const EMAIL = 'diogomartinsp1992@gmail.com';
+const LINKEDIN = 'https://www.linkedin.com/in/diogopintoo92/';
+const GITHUB = 'https://github.com/diogompintoo';
+
+const ui = {
+  en: {
+    navProjects: 'Projects',
+    navAbout: 'Stack',
+    navContact: 'Contact',
+    cv: 'Download CV',
+    heroTitle: 'Robust, scalable web applications.',
+    heroDesc:
+      "I'm Diogo, a Coding Academy graduate. I build with a strong focus on backend architecture and modern interfaces.",
+    seeProjects: 'See my projects',
+    projectsTitle: 'Projects',
+    projectsDesc: 'Select a project to see its architecture, stack and repository.',
+    otherTitle: 'Other work in production',
+    liveSite: 'Open site',
+    stackTitle: 'Stack',
+    contactTitle: 'Contact',
+    contactDesc: 'Open to junior software roles and freelance web projects.',
+    architecture: 'Architecture',
+    stackLabel: 'Stack',
+    repo: 'View repository',
+    close: 'Close',
+    footer: '© 2026 Diogo Pinto. Built with React and Tailwind CSS.',
+  },
+  pt: {
+    navProjects: 'Projetos',
+    navAbout: 'Stack',
+    navContact: 'Contacto',
+    cv: 'Descarregar CV',
+    heroTitle: 'Aplicações web robustas e escaláveis.',
+    heroDesc:
+      'Sou o Diogo, formado na Academia de Código. Construo soluções com forte ênfase em arquitetura de backend e interfaces modernas.',
+    seeProjects: 'Ver projetos',
+    projectsTitle: 'Projetos',
+    projectsDesc: 'Escolhe um projeto para ver a arquitetura, a stack e o repositório.',
+    otherTitle: 'Outros trabalhos em produção',
+    liveSite: 'Abrir site',
+    stackTitle: 'Stack',
+    contactTitle: 'Contacto',
+    contactDesc: 'Disponível para funções júnior em software e projetos web freelance.',
+    architecture: 'Arquitetura',
+    stackLabel: 'Stack',
+    repo: 'Ver repositório',
+    close: 'Fechar',
+    footer: '© 2026 Diogo Pinto. Desenvolvido com React e Tailwind CSS.',
+  },
+};
+
+const projects = [
+  {
+    id: 'fleetwise',
+    title: 'FleetWise AI',
+    subtitle: { en: 'Fleet management and optimization platform', pt: 'Plataforma de gestão e otimização de frotas' },
+    description: {
+      en: 'Advanced fleet management and optimization platform, built around robust architecture, efficiency and a smooth user experience.',
+      pt: 'Plataforma avançada de gestão e otimização de frotas, construída em torno de arquitetura robusta, eficiência e boa experiência de utilização.',
+    },
+    architecture: {
+      en: 'A robust backend service structure with REST APIs, database integration and efficient routing logic for high-demand fleet operations.',
+      pt: 'Estrutura de serviços backend robusta, com APIs REST, integração com base de dados e lógica de routing eficiente para operações de frota de alta procura.',
+    },
+    tags: ['Java', 'Spring Boot', 'REST APIs', 'Fullstack', 'Maven'],
+    repo: 'https://github.com/diogompintoo/FleetWiseAI',
+  },
+  {
+    id: 'game-closet',
+    title: 'Game Closet',
+    subtitle: { en: 'Game collection manager', pt: 'Gestor de coleções de jogos' },
+    description: {
+      en: 'Interactive application for managing and organizing game collections, pairing efficient backend logic with a fluid interface.',
+      pt: 'Aplicação interativa para gerir e organizar coleções de jogos, juntando lógica de backend eficiente a uma interface fluida.',
+    },
+    architecture: {
+      en: 'A dynamic interface built with modern JavaScript and React components, structured data management and a clean UI.',
+      pt: 'Interface dinâmica construída com componentes modernos em JavaScript e React, gestão de dados estruturada e UI limpa.',
+    },
+    tags: ['JavaScript', 'React', 'Frontend', 'UI/UX', 'Tailwind CSS'],
+    repo: 'https://github.com/diogompintoo/GameCloset',
+  },
+  {
+    id: 'game-closet',
+    title: 'Game Closet',
+    subtitle: { en: 'Game collection manager', pt: 'Gestor de coleções de jogos' },
+    description: {
+      en: 'Interactive application for managing and organizing game collections, pairing efficient backend logic with a fluid interface.',
+      pt: 'Aplicação interativa para gerir e organizar coleções de jogos, juntando lógica de backend eficiente a uma interface fluida.',
+    },
+    architecture: {
+      en: 'A dynamic interface built with modern JavaScript and React components, structured data management and a clean UI.',
+      pt: 'Interface dinâmica construída com componentes modernos em JavaScript e React, gestão de dados estruturada e UI limpa.',
+    },
+    tags: ['JavaScript', 'React', 'Frontend', 'UI/UX', 'Tailwind CSS'],
+    repo: 'https://github.com/diogompintoo/GameCloset',
+  },
+];
+
+const otherWork = [
+  {
+    title: 'Parmigiano',
+    description: { en: 'Commercial website, built and deployed to production.', pt: 'Website comercial, desenvolvido e em produção.' },
+    link: 'https://parmigiano.pt/',
+  },
+  {
+    title: 'Oh Petisco — QR menu',
+    description: {
+      en: 'Digital menu for a restaurant, served from Cloudflare Workers.',
+      pt: 'Menu digital para restauração, servido a partir de Cloudflare Workers.',
+    },
+    link: 'https://hopetiscomenu.diogompintoo3.workers.dev/',
+  },
+];
+
+const stack = [
+  { group: 'Backend', items: ['Java', 'Spring Framework', 'Maven', 'REST APIs'] },
+  { group: 'Frontend', items: ['JavaScript', 'React', 'HTML/CSS', 'Tailwind CSS'] },
+  { group: 'Tools', items: ['Git & GitHub'] },
+];
+
+/* ---------- Small componentts ---------- */
+
+// Um componente recebe "props" (os argumentos) e devolve JSX.
+function Section({ id, title, description, children }) {
+  return (
+    <section id={id} className="mx-auto max-w-5xl scroll-mt-20 border-t border-line px-6 py-16">
+      <h2 className="font-display text-3xl font-semibold">{title}</h2>
+      {description && <p className="mt-2 max-w-xl text-muted">{description}</p>}
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
+function Tag({ children }) {
+  return <li className="rounded-full border border-line px-3 py-1 text-sm text-muted">{children}</li>;
+}
+
+/* ---------- APP ---------- */
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [language, setLanguage] = useState('EN'); // 'EN' or 'PT'
-  const [selectedProject, setSelectedProject] = useState(null); // Para a janela modal
+  const [lang, setLang] = useState('pt');
+  const [dark, setDark] = useState(false);
+  const [selected, setSelected] = useState(null);
 
-  // Text translations
-  const t = {
-    EN: {
-      role: "Software Developer • Coding Academy",
-      heroTitle: "Building robust & scalable web applications.",
-      heroDesc: "Hello! I'm Diogo. A graduate from Coding Academy, I build robust solutions with a strong emphasis on backend architecture and modern user interfaces.",
-      viewProjects: "View Projects (FleetWise & Game Closet)",
-      githubBtn: "GitHub ↗",
-      cvBtn: "Download CV 📄",
-      featuredTitle: "Featured Projects",
-      featuredDesc: "Click on any project to view architectural details, tech stack, and links.",
-      otherTitle: "Other Works & Production",
-      skillsTitle: "Tech Stack",
-      footer: "© 2026 Diogo Pinto. Built with React & Tailwind CSS.",
-      navProjects: "Projects",
-      navAbout: "About",
-      navContact: "Contact",
-      closeModal: "Close Details",
-      detailsTitle: "Technical Architecture & Details",
-      viewRepo: "View Repository ↗",
-      liveSite: "Live Site ↗"
-    },
-    PT: {
-      role: "Software Developer • Academia de Código",
-      heroTitle: "Construção de aplicações web robustas e escaláveis.",
-      heroDesc: "Olá! Sou o Diogo. Formado na Academia de Código, construo soluções robustas com forte ênfase em arquitetura de backend e interfaces modernas.",
-      viewProjects: "Ver Projetos (FleetWise & Game Closet)",
-      githubBtn: "GitHub ↗",
-      cvBtn: "Descarregar CV 📄",
-      featuredTitle: "Projetos em Destaque",
-      featuredDesc: "Clica em qualquer projeto para ver detalhes de arquitetura, stack tecnológica e ligações.",
-      otherTitle: "Outros Trabalhos & Produção",
-      skillsTitle: "Stack Tecnológica",
-      footer: "© 2026 Diogo Pinto. Desenvolvido com React & Tailwind CSS.",
-      navProjects: "Projetos",
-      navAbout: "Sobre",
-      navContact: "Contacto",
-      closeModal: "Fechar Detalhes",
-      detailsTitle: "Arquitetura Técnica & Detalhes",
-      viewRepo: "Ver Repositório ↗",
-      liveSite: "Ver Site ↗"
-    }
-  };
+  const t = ui[lang];
 
-  const curr = t[language];
+  // useEffect corre "efeitos secundários" depois de o React desenhar
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+  }, [dark]);
 
-  const mainProjects = [
-    {
-      title: "FleetWise",
-      subtitle: "Fleet Management & Optimization Platform",
-      description: language === 'EN' 
-        ? "Advanced fleet management and optimization platform. Developed with a focus on robust architecture, efficiency, and seamless user experience."
-        : "Plataforma avançada de gestão e otimização de frotas. Desenvolvido com foco em arquitetura robusta, eficiência e experiência de utilização.",
-      architecture: language === 'EN'
-        ? "Built with a robust backend service structure, REST APIs, database integration, and efficient routing logic to handle high-demand fleet operations."
-        : "Construído com uma estrutura de serviços backend robusta, APIs REST, integração com base de dados e lógica de routing eficiente para lidar com operações de frota de alta procura.",
-      tags: ["Java", "Spring Boot", "REST APIs", "Fullstack", "Maven"],
-      github: "https://github.com/diogompintoo/FleetWiseAI", // Podes ajustar o link exato
-      live: "#"
-    },
-    {
-      title: "Game Closet",
-      subtitle: "Game Collection & Organization Manager",
-      description: language === 'EN'
-        ? "Interactive application focused on managing and organizing game collections, combining efficient backend logic with a fluid interface."
-        : "Aplicação interativa direcionada à gestão e organização de coleções de jogos, combinando lógica de backend eficiente com uma interface fluida.",
-      architecture: language === 'EN'
-        ? "Features a dynamic user interface built with modern JavaScript/React components, structured data management, and clean UI/UX design principles."
-        : "Apresenta uma interface de utilizador dinâmica construída com componentes modernos em JavaScript/React, gestão de dados estruturada e princípios de UI/UX limpos.",
-      tags: ["JavaScript", "React", "Frontend", "UI/UX", "Tailwind CSS"],
-      github: "https://github.com/diogompintoo",
-      live: "#"
-    }
-  ];
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
-  const otherProjects = [
-    {
-      title: "Parmigiano Website",
-      description: language === 'EN' ? "Commercial website developed and deployed to production." : "Website comercial desenvolvido e implementado em produção.",
-      link: "https://parmigiano.pt/"
-    },
-    {
-      title: "QR Code Menu (Oh Petisco)",
-      description: language === 'EN' ? "Interactive digital menu system optimized for restaurant business (Cloudflare Workers)." : "Sistema de menu digital interativo otimizado para restauração (Cloudflare Workers).",
-      link: "https://hopetiscomenu.diogompintoo3.workers.dev/"
-    }
-  ];
-
-  const skills = [
-    "Java", "Spring Framework", "Maven", "JavaScript", "React", "Git & GitHub", "REST APIs", "HTML/CSS", "Tailwind CSS"
-  ];
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e) => e.key === 'Escape' && setSelected(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selected]);
 
   return (
-    <div className={darkMode ? "bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-slate-950 relative" : "bg-slate-50 text-slate-900 min-h-screen font-sans selection:bg-cyan-600 selection:text-white relative"}>
-      
-      {/* HEADER / NAVBAR */}
-      <header className="flex justify-between items-center max-w-5xl mx-auto px-6 py-6 border-b border-slate-800/40">
-        <span className="font-bold text-lg tracking-wider text-cyan-400">Diogo Pinto</span>
-        <div className="flex items-center gap-3 md:gap-5">
-          <a href="#projects" className="text-sm hover:text-cyan-400 transition-colors hidden sm:inline">{curr.navProjects}</a>
-          <a href="#about" className="text-sm hover:text-cyan-400 transition-colors hidden sm:inline">{curr.navAbout}</a>
-          <a href="#contact" className="text-sm hover:text-cyan-400 transition-colors hidden sm:inline">{curr.navContact}</a>
-          
-          {/* Download CV Button */}
-          <a 
-            href="/cv.pdf" 
-            download 
-            className="px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/20 text-xs font-semibold transition-all"
-          >
-            {curr.cvBtn}
+    <div className="min-h-screen bg-paper text-ink selection:bg-gold selection:text-on-gold">
+      {/* HEADER */}
+      <header className="sticky top-0 z-20 border-b border-line bg-paper/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <a href="#top" className="font-display text-lg font-semibold">
+            Diogo Pinto
           </a>
-
-          {/* Language Switcher */}
-          <button 
-            onClick={() => setLanguage(language === 'EN' ? 'PT' : 'EN')}
-            className="px-2.5 py-1.5 rounded-md border border-slate-700 hover:border-cyan-500 text-xs font-semibold transition-all"
-          >
-            {language === 'EN' ? '🇵🇹 PT' : '🇬🇧 EN'}
-          </button>
-
-          {/* Dark/Light Mode */}
-          <button 
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-2 rounded-full border border-slate-700 hover:bg-slate-800 transition-all text-xs"
-          >
-            {darkMode ? "☀️" : "🌙"}
-          </button>
+          <nav className="flex items-center gap-4 text-sm">
+            <a href="#projects" className="hidden hover:text-gold-ink sm:inline">{t.navProjects}</a>
+            <a href="#about" className="hidden hover:text-gold-ink sm:inline">{t.navAbout}</a>
+            <a href="#contact" className="hidden hover:text-gold-ink sm:inline">{t.navContact}</a>
+            <a
+              href="/cv.pdf"
+              download
+              className="rounded-md bg-gold px-3 py-1.5 font-semibold text-on-gold transition-colors hover:brightness-110"
+            >
+              {t.cv}
+            </a>
+            <button
+              onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
+              className="rounded-md border border-line px-2.5 py-1.5 font-semibold transition-colors hover:border-gold"
+              aria-label={lang === 'en' ? 'Mudar para português' : 'Switch to English'}
+            >
+              {lang === 'en' ? 'PT' : 'EN'}
+            </button>
+            <button
+              onClick={() => setDark(!dark)}
+              className="rounded-md border border-line px-2.5 py-1.5 transition-colors hover:border-gold"
+              aria-label={dark ? 'Light mode' : 'Dark mode'}
+            >
+              {dark ? '☀' : '☾'}
+            </button>
+          </nav>
         </div>
       </header>
 
-      {/* HERO SECTION */}
-      <section className="max-w-5xl mx-auto px-6 py-20 md:py-28 flex flex-col items-start gap-6">
-        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-          {curr.role}
-        </span>
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-          {curr.heroTitle.split('web')[0]}web <span className="text-cyan-400">scalable</span>{curr.heroTitle.split('web')[1] || ''}
-        </h1>
-        <p className="text-lg text-slate-400 max-w-2xl leading-relaxed">
-          {curr.heroDesc}
-        </p>
-        <div className="flex flex-wrap gap-4 pt-4">
-          <a href="#projects" className="px-6 py-3 rounded-lg bg-cyan-500 text-slate-950 font-semibold hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/20">
-            {curr.viewProjects}
-          </a>
-          <a href="https://github.com/diogompintoo" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg border border-slate-700 hover:border-cyan-500 transition-all font-semibold">
-            {curr.githubBtn}
-          </a>
-        </div>
-      </section>
-
-      {/* PROJECTS SECTION - FLEETWISE & GAME CLOSET */}
-      <section id="projects" className="max-w-5xl mx-auto px-6 py-16 border-t border-slate-800/40">
-        <h2 className="text-2xl font-bold mb-2">{curr.featuredTitle}</h2>
-        <p className="text-slate-400 text-sm mb-8">{curr.featuredDesc}</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {mainProjects.map((project, index) => (
-            <div 
-              key={index} 
-              onClick={() => setSelectedProject(project)}
-              className="p-8 rounded-2xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/80 to-slate-900/40 hover:border-cyan-400 cursor-pointer transition-all flex flex-col justify-between shadow-xl shadow-cyan-950/20 group"
-            >
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-2xl font-bold text-cyan-300 group-hover:underline">{project.title}</h3>
-                  <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Featured</span>
-                </div>
-                <p className="text-slate-300 text-sm mb-6 leading-relaxed">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-cyan-200/80">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="text-xs font-semibold text-cyan-400 pt-4 border-t border-slate-800/80 flex items-center gap-1">
-                {language === 'EN' ? 'Click to view technical details ↗' : 'Clica para ver detalhes técnicos ↗'}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* OTHER PROJECTS */}
-        <h3 className="text-xl font-bold mb-4 text-slate-300">{curr.otherTitle}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {otherProjects.map((project, index) => (
-            <div key={index} className="p-5 rounded-xl border border-slate-800 bg-slate-900/30 hover:border-slate-700 transition-all flex justify-between items-center">
-              <div>
-                <h4 className="font-semibold text-slate-200">{project.title}</h4>
-                <p className="text-slate-400 text-xs mt-1">{project.description}</p>
-              </div>
-              <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-cyan-400 hover:underline shrink-0 ml-4">
-                {language === 'EN' ? 'Live Site ↗' : 'Ver Site ↗'}
+      <main id="top">
+        {/* HERO */}
+        <section className="relative overflow-hidden">
+          <PixelGrid />
+          <div className="relative mx-auto max-w-5xl px-6 py-24 md:py-36">
+            <h1 className="max-w-3xl font-display text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+              {t.heroTitle}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{t.heroDesc}</p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <a
+                href="#projects"
+                className="rounded-lg bg-gold px-6 py-3 font-semibold text-on-gold transition-colors hover:brightness-110"
+              >
+                {t.seeProjects}
               </a>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* SKILLS SECTION */}
-      <section id="about" className="max-w-5xl mx-auto px-6 py-16 border-t border-slate-800/40">
-        <h2 className="text-2xl font-bold mb-6">{curr.skillsTitle}</h2>
-        <div className="flex flex-wrap gap-3">
-          {skills.map((skill, index) => (
-            <span key={index} className="px-4 py-2 rounded-lg border border-slate-800 bg-slate-900/60 text-sm font-medium">
-              {skill}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer id="contact" className="max-w-5xl mx-auto px-6 py-12 border-t border-slate-800/40 text-center text-sm text-slate-500">
-        <p>{curr.footer}</p>
-      </footer>
-
-      {/* MODAL POP-UP PARA DETALHES TÉCNICOS */}
-      {selectedProject && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-cyan-500/40 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
-            <button 
-              onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold p-2"
-            >
-              ✕
-            </button>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-semibold">
-              {curr.detailsTitle}
-            </span>
-            <h3 className="text-2xl font-bold text-cyan-300 mt-3 mb-1">{selectedProject.title}</h3>
-            <p className="text-xs text-slate-400 mb-4">{selectedProject.subtitle}</p>
-            
-            <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-              {selectedProject.architecture}
-            </p>
-
-            <div className="mb-6">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Tech Stack</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedProject.tags.map((tag, i) => (
-                  <span key={i} className="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-cyan-300">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex gap-4 pt-4 border-t border-slate-800">
-              <a 
-                href={selectedProject.github} 
-                target="_blank" 
+              <a
+                href={GITHUB}
+                target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-lg bg-cyan-500 text-slate-950 font-semibold text-sm hover:bg-cyan-400 transition-all flex-1 text-center"
+                className="rounded-lg border border-ink/30 px-6 py-3 font-semibold transition-colors hover:border-gold"
               >
-                {curr.viewRepo}
+                GitHub
               </a>
-              <button 
-                onClick={() => setSelectedProject(null)}
-                className="px-4 py-2 rounded-lg border border-slate-700 hover:border-slate-500 text-sm font-semibold transition-all"
+            </div>
+          </div>
+        </section>
+
+        {/* PROJETOS */}
+        <Section id="projects" title={t.projectsTitle} description={t.projectsDesc}>
+          <ul className="divide-y divide-line border-y border-line">
+            {projects.map((p) => (
+              <li key={p.id}>
+                <button
+                  onClick={() => setSelected(p)}
+                  aria-haspopup="dialog"
+                  className="group grid w-full gap-4 border-l-4 border-transparent py-8 pl-4 text-left transition-colors hover:border-gold hover:bg-surface/60 md:grid-cols-[1fr_2fr] md:gap-10"
+                >
+                  <div>
+                    <h3 className="font-display text-2xl font-semibold">{p.title}</h3>
+                    <p className="mt-1 text-sm text-muted">{p.subtitle[lang]}</p>
+                  </div>
+                  <div>
+                    <p className="leading-relaxed">{p.description[lang]}</p>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {p.tags.map((tag) => (
+                        <Tag key={tag}>{tag}</Tag>
+                      ))}
+                    </ul>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <h3 className="mt-14 font-display text-xl font-semibold">{t.otherTitle}</h3>
+          <ul className="mt-4 divide-y divide-line border-y border-line">
+            {otherWork.map((w) => (
+              <li key={w.title} className="flex items-center justify-between gap-6 py-4">
+                <div>
+                  <p className="font-semibold">{w.title}</p>
+                  <p className="text-sm text-muted">{w.description[lang]}</p>
+                </div>
+                <a
+                  href={w.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 font-semibold text-gold-ink underline underline-offset-4 hover:no-underline"
+                >
+                  {t.liveSite}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/* STACK */}
+        <Section id="about" title={t.stackTitle}>
+          <dl className="grid gap-6 sm:grid-cols-3">
+            {stack.map((s) => (
+              <div key={s.group} className="border-l-2 border-gold pl-4">
+                <dt className="font-display text-lg font-semibold">{s.group}</dt>
+                <dd className="mt-2 leading-relaxed text-muted">{s.items.join(', ')}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+
+        {/* CONTACTO */}
+        <Section id="contact" title={t.contactTitle} description={t.contactDesc}>
+          <div className="flex flex-wrap gap-x-8 gap-y-3 font-semibold">
+            {EMAIL && (
+              <a href={`mailto:${EMAIL}`} className="text-gold-ink underline underline-offset-4 hover:no-underline">
+                {EMAIL}
+              </a>
+            )}
+            {LINKEDIN && (
+              <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="text-gold-ink underline underline-offset-4 hover:no-underline">
+                LinkedIn
+              </a>
+            )}
+            <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="text-gold-ink underline underline-offset-4 hover:no-underline">
+              GitHub
+            </a>
+          </div>
+        </Section>
+      </main>
+
+      <footer className="border-t border-line px-6 py-10 text-center text-sm text-muted">{t.footer}</footer>
+
+      {/* MODAL */}
+      {selected && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-xl border border-line bg-paper p-6 shadow-2xl md:p-8"
+          >
+            <h3 id="modal-title" className="font-display text-3xl font-semibold">{selected.title}</h3>
+            <p className="mt-1 text-sm text-muted">{selected.subtitle[lang]}</p>
+
+            <h4 className="mt-6 font-semibold">{t.architecture}</h4>
+            <p className="mt-1 leading-relaxed text-muted">{selected.architecture[lang]}</p>
+
+            <h4 className="mt-6 font-semibold">{t.stackLabel}</h4>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {selected.tags.map((tag) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex gap-3">
+              <a
+                href={selected.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-lg bg-gold px-4 py-2 text-center font-semibold text-on-gold transition-colors hover:brightness-110"
               >
-                {curr.closeModal}
+                {t.repo}
+              </a>
+              <button
+                onClick={() => setSelected(null)}
+                className="rounded-lg border border-line px-4 py-2 font-semibold transition-colors hover:border-gold"
+              >
+                {t.close}
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
